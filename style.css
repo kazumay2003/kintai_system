@@ -1,19 +1,45 @@
-body { font-family: sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
-.container { max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-h1, h2 { color: #0056b3; }
-.button-group button, .controls button { padding: 10px 15px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; }
-button:disabled { background-color: #cccccc; cursor: not-allowed; }
-.nav-link { display: inline-block; margin-top: 20px; color: #0056b3; text-decoration: none; }
-.nav-link:hover { text-decoration: underline; }
-/* (index.html用) */
-#start-work-btn { background-color: #28a745; }
-#end-work-btn { background-color: #dc3545; }
-#start-break-btn { background-color: #ffc107; color: black; }
-#end-break-btn { background-color: #17a2b8; }
-/* (summary.html用) */
-.controls select, .controls button { padding: 8px; font-size: 14px; }
-#summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-#summary-table th, #summary-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-#summary-table thead { background-color: #e9ecef; }
-#summary-table tbody tr:nth-child(even) { background-color: #f8f8f8; }
-
+/* edit.html用スタイル */
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input, .form-group textarea {
+    width: 95%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+.action-buttons {
+    margin-top: 20px;
+}
+.action-buttons .nav-link-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 5px;
+    border: none;
+}
+.break-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.break-row input {
+    margin-right: 10px;
+}
+.danger {
+    background-color: #dc3545;
+}

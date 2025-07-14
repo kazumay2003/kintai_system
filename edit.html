@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勤務記録の編集</title>
+    <link rel="stylesheet" href="/style.css"> <!-- パスをルートからの/style.cssに変更 -->
+</head>
+<body>
+    <div class="container">
+        <h1>勤務記録の編集</h1>
+        <h2 id="edit-date">----/--/--</h2>
+
+        <div id="loading-message">データを読み込み中...</div>
+
+        <form id="edit-form" style="display: none;">
+            <div class="form-group">
+                <label for="start-time-input">出勤時刻</label>
+                <input type="datetime-local" id="start-time-input">
+            </div>
+            <div class="form-group">
+                <label for="end-time-input">退勤時刻</label>
+                <input type="datetime-local" id="end-time-input">
+            </div>
+
+            <hr>
+
+            <h3>休憩時間</h3>
+            <div id="breaks-container">
+                <!-- 休憩時間の入力欄はJSで動的に生成 -->
+            </div>
+            <button type="button" id="add-break-btn">休憩を追加</button>
+            
+            <hr>
+
+            <div class="form-group">
+                <label for="report-input">日報</label>
+                <textarea id="report-input" rows="5"></textarea>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="submit" id="save-btn">保存する</button>
+                <a href="/summary.html" class="nav-link-button">キャンセル</a>
+                <button type="button" id="delete-btn" class="danger">この日の記録を削除</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Firebase SDKの読み込み -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <!-- 自分のアプリのスクリプト -->
+    <script src="/scripts/firebase-config.js"></script>
+    <script src="/scripts/edit.js"></script>
+</body>
+</html>
