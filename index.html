@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勤務時間記録</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>勤務時間記録</h1>
+
+        <div class="status-panel">
+            <p>今日の状態: <span id="current-status">読み込み中...</span></p>
+            <p>現在の総労働時間: <span id="total-work-time">00:00:00</span></p>
+        </div>
+
+        <div class="button-group">
+            <button id="start-work-btn">出勤</button>
+            <button id="end-work-btn" disabled>退勤</button>
+            <button id="start-break-btn" disabled>休憩開始</button>
+            <button id="end-break-btn" disabled>休憩終了</button>
+        </div>
+
+        <div class="daily-report">
+            <h2>日報</h2>
+            <textarea id="report-input" placeholder="今日の作業内容などを記録..."></textarea>
+            <button id="save-report-btn">日報を保存</button>
+        </div>
+
+        <div class="log-container">
+            <h2>本日の記録</h2>
+            <pre id="today-log">記録を読み込み中...</pre>
+        </div>
+
+        <a href="summary.html" class="nav-link">月ごとの集計ページへ</a>
+    </div>
+
+    <!-- Firebase SDKの読み込み -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+    <!-- 自分のアプリのスクリプト -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
