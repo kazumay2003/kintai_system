@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadRecord = async () => {
         try {
             const docSnap = await docRef.get();
-            if (docSnap.exists()) {
+            // ▼▼▼ ここが修正点です！ docSnap.exists() から () を削除しました ▼▼▼
+            if (docSnap.exists) {
                 populateForm(docSnap.data());
                 loadingMessage.style.display = 'none';
                 editForm.style.display = 'block';
@@ -138,5 +139,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初期データを読み込む
     loadRecord();
-
-}); // ← おそらく、この行が欠けていました
+});
