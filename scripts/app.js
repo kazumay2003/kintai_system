@@ -48,6 +48,7 @@ function updateUI() {
         endWorkBtn.disabled = true;
         startBreakBtn.disabled = true;
         endBreakBtn.disabled = true;
+        startWorkBtn.textContent = '出勤'; // テキストをリセット
         stopWorkTimer();
         return;
     }
@@ -60,6 +61,7 @@ function updateUI() {
             endWorkBtn.disabled = false;
             startBreakBtn.disabled = false;
             endBreakBtn.disabled = true;
+            startWorkBtn.textContent = '出勤'; // テキストをリセット
             startWorkTimer();
             break;
         case '休憩中':
@@ -67,13 +69,15 @@ function updateUI() {
             endWorkBtn.disabled = true;
             startBreakBtn.disabled = true;
             endBreakBtn.disabled = false;
+            startWorkBtn.textContent = '出勤'; // テキストをリセット
             stopWorkTimer();
             break;
-        case '退勤済み':
-            startWorkBtn.disabled = true;
+        case '退勤済み': // ▼▼▼ 勤務再開のためにこのブロックを修正 ▼▼▼
+            startWorkBtn.disabled = false; 
             endWorkBtn.disabled = true;
             startBreakBtn.disabled = true;
             endBreakBtn.disabled = true;
+            startWorkBtn.textContent = '勤務再開'; // ボタンのテキストを変更
             stopWorkTimer();
             break;
     }
@@ -81,15 +85,27 @@ function updateUI() {
 }
 
 // --- ボタンのイベントリスナー ---
+// ▼▼▼ 勤務再開処理を追加するために、このリスナーを修正 ▼▼▼
 startWorkBtn.addEventListener('click', () => {
     const now = new Date();
-    const data = {
-        startTime: now,
-        status: '勤務中',
-        breaks: [],
-        report: ''
-    };
-    db.collection('worklogs').doc(todayDocId).set(data).catch(e => console.error("出勤エラー:", e));
+
+    if (todayDocData && todayDocData.status === '退勤済み') {
+        // --- 勤務再開の処理 ---
+        db.collection('worklogs').doc(todayDocId).update({
+            status: '勤務中',
+            endTime: null // 退勤時間をリセット（フィールドごと削除）
+        }).catch(e => console.error("勤務再開エラー:", e));
+
+    } else if (!todayDocData) {
+        // --- 通常の新規出勤の処理 ---
+        const data = {
+            startTime: now,
+            status: '勤務中',
+            breaks: [],
+            report: ''
+        };
+        db.collection('worklogs').doc(todayDocId).set(data).catch(e => console.error("出勤エラー:", e));
+    }
 });
 
 endWorkBtn.addEventListener('click', () => {
