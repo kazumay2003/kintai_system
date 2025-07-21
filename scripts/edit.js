@@ -27,14 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadRecord = async () => {
         try {
             const docSnap = await docRef.get();
-            // ▼▼▼ ここが修正点です！ docSnap.exists() から () を削除しました ▼▼▼
+            // ▼▼▼ この if-else ブロック全体が修正点です ▼▼▼
             if (docSnap.exists) {
+                // --- データが見つかった場合（通常の編集モード） ---
                 populateForm(docSnap.data());
-                loadingMessage.style.display = 'none';
-                editForm.style.display = 'block';
+                deleteBtn.style.display = 'inline-block'; // 既存データなので削除ボタンを表示
             } else {
-                loadingMessage.textContent = 'エラー: データが見つかりませんでした。';
+                // --- データが見つからなかった場合（新規作成モード） ---
+                populateForm({}); // 空のデータを渡してフォームを初期化
+                deleteBtn.style.display = 'none'; // 新規なので削除ボタンを隠す
             }
+            loadingMessage.style.display = 'none';
+            editForm.style.display = 'block';
+
         } catch (error) {
             console.error("データの読み込みに失敗しました:", error);
             loadingMessage.textContent = 'データの読み込み中にエラーが発生しました。';
@@ -43,11 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- フォームにデータを設定 ---
     const populateForm = (data) => {
-        startTimeInput.value = formatTimestampForInput(data.startTime);
-        endTimeInput.value = formatTimestampForInput(data.endTime);
+        // dataが空でもエラーにならないように || '' を追加
+        startTimeInput.value = formatTimestampForInput(data.startTime) || '';
+        endTimeInput.value = formatTimestampForInput(data.endTime) || '';
         reportInput.value = data.report || '';
         
-        breaksContainer.innerHTML = ''; // 既存の休憩欄をクリア
+        breaksContainer.innerHTML = ''; 
         if (data.breaks && data.breaks.length > 0) {
             data.breaks.forEach(b => addBreakRow(b));
         }
@@ -111,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            // .setに { merge: true } を付けることで、新規作成(set)と更新(update)を両方カバーできる
             await docRef.set(dataToSave, { merge: true });
             alert('保存しました。');
             window.location.href = '/summary.html';
