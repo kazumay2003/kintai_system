@@ -147,8 +147,6 @@ hr {
     vertical-align: middle;
 }
 
-/* --- ▼▼▼ ここからが今回の修正箇所です ▼▼▼ --- */
-
 /* 保存ボタンのスタイル */
 #save-btn {
     background-color: #007bff; /* 明るい青色 */
@@ -197,4 +195,14 @@ hr {
 .break-row .remove-break-btn:hover {
     background-color: #5a6268;
 }
-/* --- ▲▲▲ ここまでが今回の修正箇所です ▲▲▲ --- */
+
+/* --- ▼▼▼ ここからが今回の修正箇所です ▼▼▼ --- */
+
+/* summary.htmlの新規追加ボタン */
+#add-new-btn {
+    background-color: #28a745;
+    margin-left: 20px; /* 左側に少しスペースを空ける */
+}
+#add-new-btn:hover:not(:disabled) {
+    background-color: #218838;
+}
