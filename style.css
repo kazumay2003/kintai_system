@@ -146,25 +146,55 @@ hr {
     border: none;
     vertical-align: middle;
 }
+
+/* --- ▼▼▼ ここからが今回の修正箇所です ▼▼▼ --- */
+
+/* 保存ボタンのスタイル */
+#save-btn {
+    background-color: #007bff; /* 明るい青色 */
+}
+#save-btn:hover:not(:disabled) {
+    background-color: #0069d9;
+}
+/* ページ下部の削除ボタンのスタイル */
+.action-buttons .danger {
+    background-color: #dc3545; /* 赤色 */
+}
+.action-buttons .danger:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
 .break-row {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    gap: 10px; /* 各要素間のスペースを確保 */
 }
 .break-row input {
-    margin-right: 10px;
+    margin-right: 0; /* 個別のマージンは不要に */
 }
+
+/* 休憩削除の×ボタン */
 .break-row .remove-break-btn {
-    background-color: #dc3545;
+    background-color: #6c757d; /* 落ち着いたグレー */
     color: white;
     border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    text-align: center;
+    width: 26px;  /* 少し大きくしてクリックしやすく */
+    height: 26px;
     cursor: pointer;
+    padding: 0; /* パディングをリセット */
+    
+    /* Flexboxを使って中身 (×) を完璧に中央揃えにする */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    line-height: 1; /* line-heightをリセット */
+    flex-shrink: 0; /* ボタンがウィンドウ幅で縮まないようにする */
 }
-.danger {
-    background-color: #dc3545;
+.break-row .remove-break-btn:hover {
+    background-color: #5a6268;
 }
+/* --- ▲▲▲ ここまでが今回の修正箇所です ▲▲▲ --- */
