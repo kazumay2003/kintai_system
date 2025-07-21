@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>月次集計</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container">
@@ -30,14 +30,12 @@
                 <!-- データはJSで生成 -->
             </tbody>
         </table>
-        <a href="index.html" class="nav-link">打刻ページに戻る</a>
+        <a href="/index.html" class="nav-link">打刻ページに戻る</a>
     </div>
 
-<!-- summary.html の修正箇所 -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     
-    <!-- 自分のアプリのスクリプト (↓ここを修正) -->
     <script src="/scripts/firebase-config.js"></script>
     <script src="/scripts/summary.js"></script>
 </body>

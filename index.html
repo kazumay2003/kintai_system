@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>勤務時間記録</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container">
@@ -33,15 +33,14 @@
             <pre id="today-log">記録を読み込み中...</pre>
         </div>
 
-        <a href="summary.html" class="nav-link">月ごとの集計ページへ</a>
+        <a href="/summary.html" class="nav-link">月ごとの集計ページへ</a>
     </div>
 
-<!-- index.html の修正箇所 -->
     <!-- Firebase SDKの読み込み -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-    <!-- 自分のアプリのスクリプト (↓ここを修正) -->
+    <!-- 自分のアプリのスクリプト -->
     <script src="/scripts/firebase-config.js"></script>
     <script src="/scripts/app.js"></script>
 </body>
