@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchDataBtn = document.getElementById('fetch-data-btn');
     const tableBody = document.querySelector('#summary-table tbody');
     const summaryTotal = document.getElementById('summary-total');
+    const addNewBtn = document.getElementById('add-new-btn'); // <<< 新しいボタンを取得
 
     // 年月のプルダウンを初期化
     const now = new Date();
@@ -22,6 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     fetchDataBtn.addEventListener('click', fetchAndDisplayData);
+
+    // ▼▼▼ 新しいボタンのイベントリスナーを追加 ▼▼▼
+    addNewBtn.addEventListener('click', () => {
+        const year = yearSelect.value;
+        const month = monthSelect.value;
+        
+        // 日付の入力を求める
+        const day = prompt(`${year}年${month}月の日付を入力してください。(1-31)`);
+
+        if (day && !isNaN(day) && day >= 1 && day <= 31) {
+            // 正しい日付なら、そのIDで編集ページに飛ぶ
+            const dateId = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            window.location.href = `/edit.html?id=${dateId}`;
+        } else if (day) {
+            // 入力があったが、不正な値だった場合
+            alert('無効な日付です。1から31の数字を入力してください。');
+        }
+        // dayがnull（キャンセルされた）場合は何もしない
+    });
 
     // ミリ秒を HH:MM:SS 形式に変換
     function formatMillis(millis) {
@@ -46,10 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.innerHTML = '<tr><td colspan="6">読み込み中...</td></tr>';
         summaryTotal.innerHTML = '';
 
-        const startDate = `${year}-${month}-01`;
-        const endDate = `${year}-${month}-${new Date(year, month, 0).getDate()}`;
-
         try {
+            const startDate = `${year}-${month}-01`;
+            const endDate = `${year}-${month}-${new Date(year, month, 0).getDate()}`;
+
             const snapshot = await db.collection('worklogs')
                 .where(firebase.firestore.FieldPath.documentId(), '>=', startDate)
                 .where(firebase.firestore.FieldPath.documentId(), '<=', endDate)
