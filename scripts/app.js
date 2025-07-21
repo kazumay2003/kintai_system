@@ -1,5 +1,3 @@
-// scripts/app.js にこの内容を貼り付けてください
-
 // DOM要素の取得
 const startWorkBtn = document.getElementById('start-work-btn');
 const endWorkBtn = document.getElementById('end-work-btn');

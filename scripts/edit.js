@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            await docRef.update(dataToSave);
+            await docRef.set(dataToSave, { merge: true }); // updateの代わりにset+mergeを使用
             alert('保存しました。');
             window.location.href = '/summary.html';
 
@@ -138,4 +138,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初期データを読み込む
     loadRecord();
-});
+});```
