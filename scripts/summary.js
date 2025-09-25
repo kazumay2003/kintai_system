@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.querySelector('#summary-table tbody');
     const summaryTotal = document.getElementById('summary-total');
     const addNewBtn = document.getElementById('add-new-btn'); // <<< 新しいボタンを取得
+    const csvExportBtn = document.getElementById('csv-export-btn'); // CSVエクスポートボタンを取得
 
     // 年月のプルダウンを初期化
     const now = new Date();
@@ -23,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     fetchDataBtn.addEventListener('click', fetchAndDisplayData);
+
+    // CSVエクスポートボタンのイベントリスナーを追加
+    csvExportBtn.addEventListener('click', exportToCSV);
 
     // ▼▼▼ 新しいボタンのイベントリスナーを追加 ▼▼▼
     addNewBtn.addEventListener('click', () => {
@@ -122,6 +126,86 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("データの取得に失敗しました:", error);
             tableBody.innerHTML = '<tr><td colspan="6">データの取得に失敗しました。</td></tr>';
+        }
+    }
+
+    // CSV エクスポート機能
+    async function exportToCSV() {
+        const year = yearSelect.value;
+        const month = monthSelect.value.padStart(2, '0');
+        
+        try {
+            const startDate = `${year}-${month}-01`;
+            const endDate = `${year}-${month}-${new Date(year, month, 0).getDate()}`;
+
+            const snapshot = await db.collection('worklogs')
+                .where(firebase.firestore.FieldPath.documentId(), '>=', startDate)
+                .where(firebase.firestore.FieldPath.documentId(), '<=', endDate)
+                .orderBy(firebase.firestore.FieldPath.documentId())
+                .get();
+
+            if (snapshot.empty) {
+                alert('この月のデータはありません。');
+                return;
+            }
+
+            // CSVヘッダー（A列：日、B列：開始時間、C列：終了時間、J列：合計休憩時間）
+            let csvContent = 'A,B,C,D,E,F,G,H,I,J\n'; // J列まで準備
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const date = doc.id;
+                
+                // A列：日付から日のみを半角で抽出
+                const dayOnly = date.split('-')[2]; // YYYY-MM-DD から DD を取得
+                
+                // B列：開始時間をhh:mm形式で
+                const startTime = data.startTime ? 
+                    new Date(data.startTime.seconds * 1000).toLocaleTimeString('ja-JP', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false 
+                    }) : '';
+                
+                // C列：終了時間をhh:mm形式で
+                const endTime = data.endTime ? 
+                    new Date(data.endTime.seconds * 1000).toLocaleTimeString('ja-JP', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false 
+                    }) : '';
+                
+                // J列：合計休憩時間を小数で（時間単位）
+                let totalBreakHours = 0;
+                if (data.breaks) {
+                    let totalBreakMillis = 0;
+                    data.breaks.forEach(b => {
+                        if (b.start && b.end) {
+                            totalBreakMillis += (b.end.toMillis() - b.start.toMillis());
+                        }
+                    });
+                    totalBreakHours = totalBreakMillis / (1000 * 60 * 60); // ミリ秒を時間に変換
+                }
+                
+                // CSV行を作成（A,B,C列とJ列のみ使用、他は空）
+                const csvRow = `${dayOnly},${startTime},${endTime},,,,,,,"${totalBreakHours.toFixed(2)}"\n`;
+                csvContent += csvRow;
+            });
+
+            // CSVファイルをダウンロード
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `勤怠記録_${year}年${month}月.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+        } catch (error) {
+            console.error("CSVエクスポートに失敗しました:", error);
+            alert('CSVエクスポートに失敗しました。');
         }
     }
 
