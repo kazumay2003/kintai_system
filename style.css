@@ -33,36 +33,111 @@ h1, h2 {
 button {
     padding: 10px 15px;
     margin: 5px;
-    border: none;
+    border: 2px solid;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    color: white;
-    transition: background-color 0.2s;
+    font-weight: bold;
+    transition: all 0.2s;
+    position: relative;
 }
 button:disabled {
-    background-color: #cccccc;
+    background-color: #f5f5f5 !important;
+    color: #999 !important;
+    border-color: #ddd !important;
     cursor: not-allowed;
 }
 .button-group button {
     min-width: 120px;
 }
-#start-work-btn { background-color: #28a745; }
-#start-work-btn:hover:not(:disabled) { background-color: #218838; }
-#end-work-btn { background-color: #dc3545; }
-#end-work-btn:hover:not(:disabled) { background-color: #c82333; }
-#start-break-btn { background-color: #ffc107; color: black; }
-#start-break-btn:hover:not(:disabled) { background-color: #e0a800; }
-#end-break-btn { background-color: #17a2b8; }
-#end-break-btn:hover:not(:disabled) { background-color: #138496; }
+
+/* 出勤ボタン - 緑系、▶アイコン風 */
+#start-work-btn { 
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+#start-work-btn:before {
+    content: "▶ ";
+    font-size: 14px;
+}
+#start-work-btn:hover:not(:disabled) { 
+    background-color: #333;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 退勤ボタン - 赤系、■アイコン風 */
+#end-work-btn { 
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+}
+#end-work-btn:before {
+    content: "■ ";
+    font-size: 14px;
+}
+#end-work-btn:hover:not(:disabled) { 
+    background-color: #f0f0f0;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 休憩開始ボタン - 黄系、⏸アイコン風 */
+#start-break-btn { 
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+#start-break-btn:before {
+    content: "⏸ ";
+    font-size: 14px;
+}
+#start-break-btn:hover:not(:disabled) { 
+    background-color: #555;
+    border-color: #555;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 休憩終了ボタン - 青系、▶アイコン風 */
+#end-break-btn { 
+    background-color: #fff;
+    color: #333;
+    border-color: #333;
+    border-style: dashed;
+}
+#end-break-btn:before {
+    content: "▶ ";
+    font-size: 14px;
+}
+#end-break-btn:hover:not(:disabled) { 
+    background-color: #f8f8f8;
+    border-color: #000;
+    border-style: solid;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
 
 /* パネル、ログ、日報 */
 .status-panel, .log-container, .daily-report {
     margin: 20px 0;
     padding: 15px;
-    background-color: #e9ecef;
+    background-color: #f8f8f8;
+    border: 2px solid #333;
     border-radius: 5px;
+}
+.status-panel {
+    border-left: 6px solid #000;
+}
+.log-container {
+    border-left: 6px solid #666;
+}
+.daily-report {
+    border-left: 6px solid #333;
 }
 .daily-report textarea {
     width: 95%;
@@ -70,8 +145,13 @@ button:disabled {
     height: 60px;
     margin-top: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid #333;
     border-radius: 4px;
+    background-color: #fff;
+}
+.daily-report textarea:focus {
+    outline: 3px solid #000;
+    border-color: #000;
 }
 .log-container pre {
     white-space: pre-wrap;
@@ -82,10 +162,12 @@ button:disabled {
 
 /* summary.html用 */
 .controls {
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 20px;
-    background-color: #f8f9fa;
+    background-color: #f0f0f0;
+    border: 2px solid #333;
     border-radius: 5px;
+    border-left: 6px solid #000;
 }
 .controls select, .controls button {
     padding: 8px;
@@ -96,18 +178,29 @@ button:disabled {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    border: 3px solid #000;
 }
 #summary-table th, #summary-table td {
-    border: 1px solid #ddd;
+    border: 2px solid #333;
     padding: 12px;
     text-align: left;
     vertical-align: middle;
 }
 #summary-table thead {
-    background-color: #e9ecef;
+    background-color: #000;
+    color: #fff;
+    font-weight: bold;
+}
+#summary-table tbody tr:nth-child(odd) {
+    background-color: #fff;
 }
 #summary-table tbody tr:nth-child(even) {
-    background-color: #f8f8f8;
+    background-color: #f0f0f0;
+    border-left: 4px solid #666;
+}
+#summary-table tbody tr:hover {
+    background-color: #e8e8e8;
+    outline: 2px solid #000;
 }
 
 /* edit.html用 */
@@ -123,8 +216,13 @@ button:disabled {
     width: 95%;
     padding: 8px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 2px solid #333;
     border-radius: 4px;
+    background-color: #fff;
+}
+.form-group input:focus, .form-group textarea:focus {
+    outline: 3px solid #000;
+    border-color: #000;
 }
 hr {
     margin: 20px 0;
@@ -149,17 +247,38 @@ hr {
 
 /* 保存ボタンのスタイル */
 #save-btn {
-    background-color: #007bff; /* 明るい青色 */
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+#save-btn:before {
+    content: "💾 ";
+    font-size: 14px;
 }
 #save-btn:hover:not(:disabled) {
-    background-color: #0069d9;
+    background-color: #333;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
 /* ページ下部の削除ボタンのスタイル */
 .action-buttons .danger {
-    background-color: #dc3545; /* 赤色 */
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+    border-style: double;
+    border-width: 3px;
+}
+.action-buttons .danger:before {
+    content: "🗑 ";
+    font-size: 14px;
 }
 .action-buttons .danger:hover:not(:disabled) {
-    background-color: #c82333;
+    background-color: #f0f0f0;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .break-row {
@@ -200,9 +319,56 @@ hr {
 
 /* summary.htmlの新規追加ボタン */
 #add-new-btn {
-    background-color: #28a745;
-    margin-left: 20px; /* 左側に少しスペースを空ける */
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+    border-style: dotted;
+    border-width: 2px;
+    margin-left: 20px;
+}
+#add-new-btn:before {
+    content: "➕ ";
+    font-size: 14px;
 }
 #add-new-btn:hover:not(:disabled) {
-    background-color: #218838;
+    background-color: #f8f8f8;
+    border-style: solid;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* CSVエクスポートボタン */
+#csv-export-btn {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+    margin-left: 10px;
+}
+#csv-export-btn:before {
+    content: "📊 ";
+    font-size: 14px;
+}
+#csv-export-btn:hover:not(:disabled) {
+    background-color: #555;
+    border-color: #555;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 表示ボタン */
+#fetch-data-btn {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+#fetch-data-btn:before {
+    content: "🔍 ";
+    font-size: 14px;
+}
+#fetch-data-btn:hover:not(:disabled) {
+    background-color: #333;
+    border-color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
