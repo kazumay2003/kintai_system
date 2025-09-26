@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchDataBtn = document.getElementById('fetch-data-btn');
     const tableBody = document.querySelector('#summary-table tbody');
     const summaryTotal = document.getElementById('summary-total');
+    const salaryInfo = document.getElementById('salary-info'); // 給与情報表示エリア
     const addNewBtn = document.getElementById('add-new-btn'); // <<< 新しいボタンを取得
     const csvExportBtn = document.getElementById('csv-export-btn'); // CSVエクスポートボタンを取得
 
@@ -47,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // dayがnull（キャンセルされた）場合は何もしない
     });
 
+    // 定数：時給
+    const HOURLY_WAGE = 1300;
+
     // ミリ秒を HH:MM:SS 形式に変換
     function formatMillis(millis) {
         if (isNaN(millis) || millis < 0) return "00:00:00";
@@ -55,6 +59,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    // ミリ秒を時間（小数）に変換
+    function millisToHours(millis) {
+        if (isNaN(millis) || millis < 0) return 0;
+        return millis / (1000 * 60 * 60);
+    }
+
+    // 給与を計算
+    function calculateSalary(totalWorkMillis) {
+        const totalHours = millisToHours(totalWorkMillis);
+        return Math.floor(totalHours * HOURLY_WAGE);
+    }
+
+    // 数値を3桁区切りでフォーマット
+    function formatCurrency(amount) {
+        return amount.toLocaleString('ja-JP');
     }
     
     // 時刻を HH:MM 形式に変換
@@ -69,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         tableBody.innerHTML = '<tr><td colspan="6">読み込み中...</td></tr>';
         summaryTotal.innerHTML = '';
+        salaryInfo.innerHTML = '';
 
         try {
             const startDate = `${year}-${month}-01`;
@@ -83,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (snapshot.empty) {
                 tableBody.innerHTML = '<tr><td colspan="6">この月のデータはありません。</td></tr>';
                 summaryTotal.innerHTML = '';
+                salaryInfo.innerHTML = '';
                 return;
             }
 
@@ -121,7 +144,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.appendChild(tr);
             });
             
+            const totalHours = millisToHours(monthTotalWorkMillis);
+            const totalSalary = calculateSalary(monthTotalWorkMillis);
+            
             summaryTotal.innerHTML = `<h3>${year}年${month}月の合計労働時間: ${formatMillis(monthTotalWorkMillis)}</h3>`;
+            salaryInfo.innerHTML = `
+                <div class="salary-summary">
+                    <h3>💰 給与計算</h3>
+                    <div class="salary-details">
+                        <div class="salary-row">
+                            <span class="salary-label">総労働時間:</span>
+                            <span class="salary-value">${totalHours.toFixed(2)}時間</span>
+                        </div>
+                        <div class="salary-row">
+                            <span class="salary-label">時給:</span>
+                            <span class="salary-value">${formatCurrency(HOURLY_WAGE)}円</span>
+                        </div>
+                        <div class="salary-row total-salary">
+                            <span class="salary-label">合計給与:</span>
+                            <span class="salary-value">${formatCurrency(totalSalary)}円</span>
+                        </div>
+                    </div>
+                </div>
+            `;
 
         } catch (error) {
             console.error("データの取得に失敗しました:", error);

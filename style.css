@@ -372,3 +372,51 @@ hr {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+/* 給与計算表示部分 */
+#salary-info {
+    margin: 20px 0;
+}
+.salary-summary {
+    background-color: #f8f8f8;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 6px solid #000;
+}
+.salary-summary h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #000;
+    font-size: 18px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+}
+.salary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.salary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+.salary-row.total-salary {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #333;
+    font-weight: bold;
+    font-size: 16px;
+}
+.salary-label {
+    font-weight: bold;
+}
+.salary-value {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
