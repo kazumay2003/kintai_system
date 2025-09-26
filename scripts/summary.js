@@ -64,12 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ミリ秒を時間（小数）に変換
     function millisToHours(millis) {
         if (isNaN(millis) || millis < 0) return 0;
-        return millis / (1000 * 60 * 60);
+        // より正確な計算のため、小数点以下4桁で丸める
+        return Math.round(millis / (1000 * 60 * 60) * 10000) / 10000;
     }
 
     // 給与を計算
     function calculateSalary(totalWorkMillis) {
         const totalHours = millisToHours(totalWorkMillis);
+        // 時給計算も精度を保つため、最後に丸める
         return Math.floor(totalHours * HOURLY_WAGE);
     }
 
@@ -112,6 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let monthTotalWorkMillis = 0;
             tableBody.innerHTML = '';
 
+            console.log('=== 日別労働時間計算デバッグ ===');
+            
             snapshot.forEach(doc => {
                 const data = doc.data();
                 const date = doc.id;
@@ -127,8 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let totalWorkMillis = 0;
                 if (data.startTime && data.endTime) {
-                    totalWorkMillis = (data.endTime.toMillis() - data.startTime.toMillis()) - totalBreakMillis;
+                    const workDurationMillis = data.endTime.toMillis() - data.startTime.toMillis();
+                    totalWorkMillis = workDurationMillis - totalBreakMillis;
+                    
+                    // デバッグログ
+                    console.log(`${date}:`, {
+                        '開始時間': new Date(data.startTime.toMillis()).toLocaleString(),
+                        '終了時間': new Date(data.endTime.toMillis()).toLocaleString(),
+                        '勤務時間（ミリ秒）': workDurationMillis,
+                        '休憩時間（ミリ秒）': totalBreakMillis,
+                        '総労働時間（ミリ秒）': totalWorkMillis,
+                        '総労働時間（時間）': millisToHours(totalWorkMillis).toFixed(2)
+                    });
+                    
                     monthTotalWorkMillis += totalWorkMillis;
+                } else {
+                    console.log(`${date}: 開始時間または終了時間がありません`);
                 }
 
                 const tr = document.createElement('tr');
@@ -144,8 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.appendChild(tr);
             });
             
+            console.log('=== 月合計計算デバッグ ===');
+            console.log('月合計労働時間（ミリ秒）:', monthTotalWorkMillis);
+            console.log('月合計労働時間（時間）:', millisToHours(monthTotalWorkMillis));
+            console.log('==============================');
+            
             const totalHours = millisToHours(monthTotalWorkMillis);
             const totalSalary = calculateSalary(monthTotalWorkMillis);
+            
+            // デバッグ用ログ
+            console.log('=== 給与計算デバッグ ===');
+            console.log('合計労働時間（ミリ秒）:', monthTotalWorkMillis);
+            console.log('合計労働時間（時間）:', totalHours);
+            console.log('時給:', HOURLY_WAGE);
+            console.log('計算前の給与:', totalHours * HOURLY_WAGE);
+            console.log('最終給与（切り捨て後）:', totalSalary);
+            console.log('========================');
             
             summaryTotal.innerHTML = `<h3>${year}年${month}月の合計労働時間: ${formatMillis(monthTotalWorkMillis)}</h3>`;
             salaryInfo.innerHTML = `
